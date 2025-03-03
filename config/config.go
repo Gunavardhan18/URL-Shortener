@@ -3,14 +3,35 @@ package config
 import (
 	"log"
 	"os"
+	"strconv"
 
-	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 )
 
+type ConnectionConfig struct {
+	DB_URL    string
+	RedisHost string
+	Port      int
+}
+
 // Load environment variables
-func Load() {
-	if err := godotenv.Load(".env"); err != nil {
-		log.Fatal("Error loading .env file")
+func Load() ConnectionConfig {
+	viper.SetConfigName("env")         // File name (without extension)
+	viper.SetConfigType("yaml")        // File type
+	viper.AddConfigPath("../config/.") // Look in the current directory
+
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file: %v", err)
+	}
+	dbURL := viper.GetString("DB_URL")
+	redisAddress := viper.GetString("REDIS_ADDR")
+	portStr := viper.GetString("PORT")
+
+	port, _ := strconv.ParseInt(portStr, 10, 16)
+	return ConnectionConfig{
+		DB_URL:    dbURL,
+		RedisHost: redisAddress,
+		Port:      int(port),
 	}
 }
 

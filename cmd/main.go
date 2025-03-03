@@ -12,10 +12,10 @@ import (
 
 func main() {
 	// Load Config
-	config.Load()
+	cfg := config.Load()
 
 	// Connect to storage (PostgreSQL & Redis)
-	db := storage.NewPostgresDB()
+	db := storage.NewPostgresDB(cfg.DB_URL)
 	cache := storage.NewRedisClient()
 
 	// Initialize Fiber

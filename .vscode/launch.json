@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch URL Shortener",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/cmd/main.go",
+            "args": [],
+            "env": {
+                "DATABASE_URL": "postgres://user:password@localhost:5432/url_shortener?sslmode=disable",
+                "REDIS_URL": "redis://localhost:6379"
+            }
+        },
+        {
+            "name": "Attach to Running Go Process",
+            "type": "go",
+            "request": "attach",
+            "mode": "remote",
+            "remotePath": "",
+            "port": 2345,
+            "host": "127.0.0.1"
+        }
+    ]
+}

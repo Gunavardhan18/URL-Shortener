@@ -11,8 +11,8 @@ type PostgresDB struct {
 	DB *sql.DB
 }
 
-func NewPostgresDB() *PostgresDB {
-	db, err := sql.Open("postgres", "DB_URL")
+func NewPostgresDB(DB_URL string) *PostgresDB {
+	db, err := sql.Open("postgres", DB_URL)
 	if err != nil {
 		log.Fatal(err)
 	}
