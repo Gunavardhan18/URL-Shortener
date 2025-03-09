@@ -3,8 +3,11 @@ package storage
 import (
 	"context"
 	"fmt"
+	"log"
+	"os"
 	"time"
 
+	"github.com/guna/url-shortener/config"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -12,12 +15,19 @@ type RedisClient struct {
 	Client *redis.Client
 }
 
-func NewRedisClient() *RedisClient {
+func NewRedisClient(cfg config.ConnectionConfig) *RedisClient {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     cfg.RedisHost,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
+
+	_, err := rdb.Ping(context.Background()).Result()
+	if err != nil {
+		log.Fatalf("Failed to connect to Redis: %v", err)
+		os.Exit(1)
+	}
+	log.Println("Connected to Redis successfully!")
 	return &RedisClient{Client: rdb}
 }
 

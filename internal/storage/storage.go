@@ -16,9 +16,15 @@ type PostgresDB struct {
 func NewPostgresDB(DB_URL string) *PostgresDB {
 	db, err := sql.Open("postgres", DB_URL)
 	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
+		log.Fatalf("Failed to open database: %v", err)
+		os.Exit(1) // Exit immediately
 	}
+	err = db.Ping()
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+		os.Exit(1) // Exit immediately
+	}
+
 	return &PostgresDB{DB: db}
 }
 

@@ -8,9 +8,10 @@ import (
 )
 
 type ConnectionConfig struct {
-	DB_URL    string
-	RedisHost string
-	Port      string
+	DB_URL        string
+	RedisHost     string
+	RedisPassword string
+	Port          string
 }
 
 // Load environment variables

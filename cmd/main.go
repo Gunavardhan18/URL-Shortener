@@ -15,7 +15,7 @@ func main() {
 
 	// Connect to storage (PostgreSQL & Redis)
 	db := storage.NewPostgresDB(cfg.DB_URL)
-	cache := storage.NewRedisClient()
+	cache := storage.NewRedisClient(cfg)
 
 	// Initialize Fiber
 	app := app.NewApplication(db, cache)
