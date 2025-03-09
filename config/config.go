@@ -3,7 +3,6 @@ package config
 import (
 	"log"
 	"os"
-	"strconv"
 
 	"github.com/spf13/viper"
 )
@@ -11,7 +10,7 @@ import (
 type ConnectionConfig struct {
 	DB_URL    string
 	RedisHost string
-	Port      int
+	Port      string
 }
 
 // Load environment variables
@@ -25,13 +24,11 @@ func Load() ConnectionConfig {
 	}
 	dbURL := viper.GetString("DB_URL")
 	redisAddress := viper.GetString("REDIS_ADDR")
-	portStr := viper.GetString("PORT")
-
-	port, _ := strconv.ParseInt(portStr, 10, 16)
+	port := viper.GetString("PORT")
 	return ConnectionConfig{
 		DB_URL:    dbURL,
 		RedisHost: redisAddress,
-		Port:      int(port),
+		Port:      port,
 	}
 }
 

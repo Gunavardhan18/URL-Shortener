@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/guna/url-shortener/api"
+	"github.com/guna/url-shortener/app"
 	"github.com/guna/url-shortener/config"
 	"github.com/guna/url-shortener/internal/storage"
 )
@@ -19,13 +18,10 @@ func main() {
 	cache := storage.NewRedisClient()
 
 	// Initialize Fiber
-	app := fiber.New()
+	app := app.NewApplication(db, cache)
 
-	// Register routes
-	api.SetupRoutes(app, db, cache)
-
-	// Start Server
-	port := config.GetPort()
-	log.Fatal(app.Listen(":" + port))
-	fmt.Println("Server running on port", port)
+	// setup required components
+	app.SetupComponents()
+	log.Fatal(app.App.Listen(":" + cfg.Port))
+	fmt.Println("Server running on port", cfg.Port)
 }
