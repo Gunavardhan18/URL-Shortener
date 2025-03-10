@@ -1,5 +1,7 @@
 package app
 
+import "github.com/guna/url-shortener/internal/middleware"
+
 func (app *Application) setupRoutes() {
 	app.SetupHealthRoutes()
 	app.SetupUserRoutes()
@@ -13,8 +15,9 @@ func (app *Application) SetupHealthRoutes() {
 func (app *Application) SetupUserRoutes() {
 	app.App.Post("/api/auth/signup", app.handler.SignUp)
 	app.App.Post("/api/auth/login", app.handler.Login)
-	app.App.Delete("/api/auth/logout", app.handler.Logout)
-	app.App.Get("/api/user/profile", app.handler.GetProfile)
+	app.App.Post("/api/auth/logout", middleware.AuthMiddleware(), app.handler.Logout)
+	app.App.Get("/api/user/profile", middleware.AuthMiddleware(), app.handler.GetProfile)
+	app.App.Put("/api/user/profile", middleware.AuthMiddleware(), app.handler.UpdateProfile)
 }
 
 func (app *Application) SetupURLRoutes() {

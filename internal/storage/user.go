@@ -12,13 +12,13 @@ type IUserStorage interface {
 
 func (db *PostgresDB) GetUserByEmail(email string) (*models.User, error) {
 	var user *models.User
-	err := db.DB.QueryRow("SELECT * FROM users WHERE email = $1 and status = $2", email, models.USER_ACTIVE).Scan(&user)
+	err := db.DB.QueryRow("SELECT * FROM users WHERE email = $1 and status = $2", email).Scan(&user)
 	return user, err
 }
 
 func (db *PostgresDB) GetUserByID(userID uint64) (*models.User, error) {
 	var user *models.User
-	err := db.DB.QueryRow("SELECT * FROM users WHERE id = $1 and status = $2", userID, models.USER_ACTIVE).Scan(&user)
+	err := db.DB.QueryRow("SELECT * FROM users WHERE id = $1 and status = $2", userID).Scan(&user)
 	return user, err
 }
 
@@ -28,7 +28,7 @@ func (db *PostgresDB) CreateUser(user *models.User) error {
 }
 
 func (db *PostgresDB) UpdateUser(user *models.User) error {
-	_, err := db.DB.Exec("UPDATE users SET email = $1, password = $2 WHERE id = $3", user.Email, user.Password)
+	_, err := db.DB.Exec("UPDATE users SET email = $1, password = $2 WHERE id = $3", user.Email, user.Password, user.ID)
 	return err
 }
 

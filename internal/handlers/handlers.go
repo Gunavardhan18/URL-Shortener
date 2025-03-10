@@ -21,6 +21,7 @@ type IURLHandler interface {
 	Login(c *fiber.Ctx) error
 	Logout(c *fiber.Ctx) error
 	GetProfile(c *fiber.Ctx) error
+	UpdateProfile(c *fiber.Ctx) error
 	ShortenURL(c *fiber.Ctx) error
 	RedirectURL(c *fiber.Ctx) error
 	UpdateURL(c *fiber.Ctx) error

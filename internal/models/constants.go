@@ -34,4 +34,6 @@ const (
 	ErrInvalidUserID      = "invalid user id"
 	ErrInvalidURLID       = "invalid url id"
 	ErrInvalidURLStatus   = "invalid url status"
+	ErrUserInactive       = "user is inactive"
+	ErrPasswordDoestMatch = "password does not match"
 )
