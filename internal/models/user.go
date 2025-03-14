@@ -26,13 +26,6 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-type URL struct {
-	ID       uint64 `json:"id"`
-	ShortURL string `json:"short_url"`
-	LongURL  string `json:"long_url"`
-	UserID   uint64 `json:"user_id"`
-}
-
 type ProfileResponse struct {
 	ID     uint64 `json:"id"`
 	Name   string `json:"name"`

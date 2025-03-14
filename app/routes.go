@@ -21,9 +21,9 @@ func (app *Application) SetupUserRoutes() {
 }
 
 func (app *Application) SetupURLRoutes() {
-	app.App.Post("urlshortner/shorten", app.handler.ShortenURL)
-	app.App.Get("urlshortner/:shortCode", app.handler.RedirectURL)
-	app.App.Put("urlshortner/:shortCode", app.handler.UpdateURL)
-	app.App.Delete("/urlshortner/urls/:shortCode", app.handler.DeleteURL)
-	app.App.Get("/urlshortner/urls", app.handler.GetAllURLs)
+	app.App.Post("urlshortner/shorten", middleware.AuthMiddleware(), app.handler.ShortenURL)
+	app.App.Get("urlshortner/:shortCode", middleware.AuthMiddleware(), app.handler.RedirectURL)
+	app.App.Put("urlshortner/:shortCode", middleware.AuthMiddleware(), app.handler.UpdateURL)
+	app.App.Delete("/urlshortner/:shortCode", middleware.AuthMiddleware(), app.handler.DeleteURL)
+	app.App.Get("/urlshortner/urls/all", middleware.AuthMiddleware(), app.handler.GetAllURLs)
 }

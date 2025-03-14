@@ -12,7 +12,8 @@ CREATE TABLE users (
 CREATE TABLE urls (
     id SERIAL PRIMARY KEY,
     short_code VARCHAR(10) UNIQUE NOT NULL,
-    original_url TEXT NOT NULL,
+    long_url TEXT NOT NULL,
+    status SMALLINT NOT NULL DEFAULT 1, -- 1 = Active, 0 = Inactive
     user_id INT REFERENCES users(id) ON DELETE SET NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- postgress does not support ON UPDATE CURRENT_TIMESTAMP
@@ -24,7 +25,9 @@ CREATE TABLE url_analytics (
     id SERIAL PRIMARY KEY,
     short_code VARCHAR(10) REFERENCES urls(short_code) ON DELETE CASCADE,
     accessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ip_address VARCHAR(45),
-    user_agent TEXT
+    user_id INT REFERENCES users(id) ON DELETE SET NULL
+    UNIQUE (short_code, user_id)
+    INDEX (short_code, user_id)
 );

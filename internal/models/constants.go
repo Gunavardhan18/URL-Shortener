@@ -6,13 +6,9 @@ const (
 	AdminRole = "admin"
 	UserRole  = "user"
 
-	// UserStatus
-	ActiveStatus   = "active"
-	InactiveStatus = "inactive"
-
-	// URLStatus
-	ActiveURLStatus   = "active"
-	InactiveURLStatus = "inactive"
+	// URL Status
+	URLActive   = 1
+	URLInactive = 0
 
 	// Error messages
 	ErrInvalidCredentials  = "invalid credentials"

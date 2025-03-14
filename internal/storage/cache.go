@@ -7,8 +7,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/guna/url-shortener/config"
+	"github.com/guna/url-shortener/internal/utils"
 	"github.com/redis/go-redis/v9"
+	"github.com/sirupsen/logrus"
 )
 
 type RedisClient struct {
@@ -32,21 +35,27 @@ func NewRedisClient(cfg config.ConnectionConfig) *RedisClient {
 }
 
 type ICacheStorage interface {
-	Ping(ctx context.Context) error
-	StoreInCache(ctx context.Context, shortCode, longURL string, ttl time.Duration) error
-	GetFromCache(ctx context.Context, shortCode string) (string, error)
-	DeleteFromCache(ctx context.Context, shortCode string) error
+	Ping(c context.Context) error
+	StoreInCache(c *fiber.Ctx, shortCode, longURL string, ttl time.Duration) error
+	GetFromCache(c *fiber.Ctx, shortCode string) (string, error)
+	DeleteFromCache(c *fiber.Ctx, shortCode string) error
 }
 
-func (rc *RedisClient) StoreInCache(ctx context.Context, shortCode, longURL string, ttl time.Duration) error {
-	err := rc.Client.Set(ctx, shortCode, longURL, 0).Err()
+func (rc *RedisClient) StoreInCache(c *fiber.Ctx, shortCode, longURL string, ttl time.Duration) error {
+	ctx := c.Context()
+	tracker := utils.GetTracker(c)
+	err := rc.Client.Set(ctx, shortCode, longURL, ttl).Err()
 	if err != nil {
-		fmt.Println("Redis error:", err)
+		logrus.WithFields(logrus.Fields{
+			"tracker": tracker,
+			"err":     err.Error(),
+		}).Error(fmt.Sprintf("Failed to store %s in cache", shortCode))
 	}
 	return err
 }
 
-func (rc *RedisClient) GetFromCache(ctx context.Context, shortCode string) (string, error) {
+func (rc *RedisClient) GetFromCache(c *fiber.Ctx, shortCode string) (string, error) {
+	ctx := c.Context()
 	return rc.Client.Get(ctx, shortCode).Result()
 }
 
@@ -55,6 +64,7 @@ func (rc *RedisClient) Ping(ctx context.Context) error {
 	return err
 }
 
-func (rc *RedisClient) DeleteFromCache(ctx context.Context, shortCode string) error {
+func (rc *RedisClient) DeleteFromCache(c *fiber.Ctx, shortCode string) error {
+	ctx := c.Context()
 	return rc.Client.Del(ctx, shortCode).Err()
 }

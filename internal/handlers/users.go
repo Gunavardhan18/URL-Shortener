@@ -111,6 +111,7 @@ func (h *handler) Login(c *fiber.Ctx) error {
 
 	logrus.WithFields(logrus.Fields{
 		"tracker": tracker,
+		"token":   c.GetRespHeader("Authorization"),
 	}).Info("Login successful")
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "Login successful, hello " + user.Name,
